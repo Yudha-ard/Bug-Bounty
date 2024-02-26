@@ -1,7 +1,7 @@
 ## Scan Open Port with RUSTSCAN
 
 ```
-cat list.txt | while IFS= read -r ip; do rustscan -a "$ip" --ulimit 99999 --accessible -g | sort -rn | while IFS= read -r port; do echo "$ip: $port"; done; done
+cat list.txt | while IFS= read -r ip; do rustscan -a "$ip" --ulimit 99999 --accessible -g | grep -oP "\d+" | sort -urn | xargs -I {} echo "$ip:{}"; done
 ```
 ## Scan Subdomain & DNS
 - Subdomain C99: https://api.c99.nl 
