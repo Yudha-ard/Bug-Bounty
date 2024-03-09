@@ -28,22 +28,3 @@ yusub "$domain" | anew "$output_file"
 sleep 5
 dnsx -silent -a -resp-only -l "$output_file" | anew "$output_file"
 ```
-
-<!-- Ini adalah komentar dalam HTML -->
-
-<h1>Judul Utama</h1>
-<!-- Ini adalah tag HTML untuk membuat judul utama (h1) -->
-
-<p>Ini adalah paragraf teks.</p>
-<!-- Ini adalah tag HTML untuk membuat paragraf (p) -->
-
-<a href="https://www.example.com">Tautan</a>
-<!-- Ini adalah tag HTML untuk membuat tautan (a) -->
-
-<img src="gambar.jpg" alt="Deskripsi Gambar">
-<!-- Ini adalah tag HTML untuk menampilkan gambar (img) -->
-
-<iframe width="560" height="315" src="https://www.youtube.com/embed/UmX4kyB2wfg" frameborder="0" allowfullscreen></iframe>
-<!-- Ini adalah tag HTML untuk menampilkan video YouTube (iframe) -->
-
-<!-- Jangan lupa untuk menutup setiap tag HTML dengan tag penutup jika diperlukan -->
