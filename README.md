@@ -4,27 +4,38 @@
 cat list.txt | while IFS= read -r ip; do rustscan -a "$ip" --ulimit 99999 --accessible -g | grep -oP "\d+" | sort -urn | xargs -I {} echo "$ip:{}"; done
 ```
 ## Scan Subdomain & DNS
-- Subdomain C99: https://api.c99.nl 
-- Censys: https://search.censys.io
-- AMASS: https://github.com/owasp-amass/amass
-- Subfinder: https://github.com/projectdiscovery/subfinder
-- Yusub: https://github.com/justakazh/yusub
-- DNSX: https://github.com/projectdiscovery/dnsx
+  - Anew: https://github.com/tomnomnom/anew
+  - RustScan: https://github.com/RustScan/RustScan
+  - Subdomain C99: https://api.c99.nl 
+  - Censys: https://search.censys.io
+  - AMASS: https://github.com/owasp-amass/amass
+  - Subfinder: https://github.com/projectdiscovery/subfinder
+  - Yusub: https://github.com/justakazh/yusub
+  - DNSX: https://github.com/projectdiscovery/dnsx
 
 ```
 #!/bin/bash
+
+#Domain
 domain="$1"
+#Output File
 output_file="$domain.txt"
 
-
-curl -s "https://api.c99.nl/subdomainfinder?key={key}&domain=$domain&format=json" | sed 's/<[^>]*>/\n/g' | sort -u | anew "$output_file"
-curl -X GET "https://search.censys.io/api/v2/hosts/search?virtual_hosts=EXCLUDE&q=$domain" --silent -H "Accept: application/json" --user "{CENSYS_API_ID}:{CENSYS_API_SECRET}" | jq -r '.result.hits[] | "\(.ip):\(.services[].port)"' | anew "$output_file"
+#Subdomain Scanner C99
+#curl -s "https://api.c99.nl/subdomainfinder?key={key}&domain=$domain&format=json" | sed 's/<[^>]*>/\n/g' | sort -u | anew "$output_file"
+curl -X GET "https://search.censys.io/api/v2/hosts/search?virtual_hosts=EXCLUDE&q=$domain+and+dns.names%3D%22*.$domain%22" --silent -H "Accept: application/json" --user "{api_id}:{api_secret}" | jq -r '.result.hits[] | "\(.ip):\(.services[].port)"' | anew "$output_file"
 sleep 5
+# Subdomain Scanner AMASS
 amass enum -silent -brute -active -d "$domain" | anew "$output_file"
 sleep 5
+#SubdomainScanner Subfinder
 subfinder -all -silent -d "$domain" | anew "$output_file"
 sleep 5
+#Subdomain Scanner Yusub
 yusub "$domain" | anew "$output_file"
 sleep 5
+#DNSX
 dnsx -silent -a -resp-only -l "$output_file" | anew "$output_file"
+sleep 10
+grep -v ":" "$output_file" | while IFS= read -r ip_address; do rustscan -a "$ip_address" --ulimit 99999 --accessible -g | grep -oP "\d+" | sort -urn | xargs -I {} echo "$ip_address:{}"; done | anew "$output_file"
 ```
