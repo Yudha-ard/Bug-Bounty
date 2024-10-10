@@ -11,6 +11,7 @@ cat list.txt | while IFS= read -r ip; do rustscan -a "$ip" --ulimit 99999 --acce
   - AMASS: https://github.com/owasp-amass/amass
   - Subfinder: https://github.com/projectdiscovery/subfinder
   - Yusub: https://github.com/justakazh/yusub
+  - CRT.sh: https://crt.sh
   - DNSX: https://github.com/projectdiscovery/dnsx
 
 ```
@@ -34,6 +35,9 @@ sleep 5
 #Subdomain Scanner Yusub
 yusub "$domain" | anew "$output_file"
 sleep 5
+#crt.sh
+curl -skL "https://crt.sh/?q=$domain&output=json" | jq -r ".[].common_name,.[].name_value" | tr -d '"' | sed
+-E 's/\\n/\n/g;s/\*.//g;/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}/d' | sort -u | anew "$output_file"
 #DNSX
 dnsx -silent -a -resp-only -l "$output_file" | anew "$output_file"
 sleep 10
