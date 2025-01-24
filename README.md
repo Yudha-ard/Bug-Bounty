@@ -1,7 +1,7 @@
 ## Scan Open Port with RUSTSCAN
 
 ```
-cat list.txt | while IFS= read -r ip; do rustscan -a "$ip" --ulimit 99999 --accessible -g | grep -oP "\d+" | sort -urn | xargs -I {} echo "$ip:{}"; done
+cat list.txt | while IFS= read -r ip; do rustscan -a "$ip" --ulimit 65530 --accessible -g | grep -oP "\d+" | sort -urn | xargs -I {} echo "$ip:{}"; done
 ```
 ## Scan Subdomain & DNS
   - Anew: https://github.com/tomnomnom/anew
