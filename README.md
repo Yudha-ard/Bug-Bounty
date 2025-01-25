@@ -47,5 +47,5 @@ grep -v ":" "$output_file" | while IFS= read -r ip_address; do rustscan -a "$ip_
 
 ## Crt + Rustscan + Nuclei
 ```
-curl -skl "https://crt.sh/json?q=<site>" | jq -r ".[].name_value" | sort -u | while IFS= read -r ip; do rustscan -a "$ip" --ulimit 65530 --accessible -g | grep -oP "\d+" | sort -urn | xargs -I {} echo "$ip:{}"; done | httprobe | nuclei -nh -as -itags  js,seclist,passive,network,file,fuzz,headless,extractor,headless,tech,dns,code,linux,privesc,cloud,devops,osint,tcp,kev,exposure,backdoor,honeypot 
+DOMAIN="<site>"; curl -sk "https://crt.sh/json?q=$DOMAIN" | jq -r ".[].name_value" | sort -u | while IFS= read -r ip; do rustscan -a "$ip" --ulimit 65530 --ports 80,443,8080,8443 --accessible -g | grep -oP "\d+" | sort -urn | xargs -I {} echo "$ip:{}"; done | httprobe | nuclei -nh -as -itags js,seclist,passive,network,file,fuzz,headless,extractor,tech,dns,code,linux,privesc,cloud,devops,osint,tcp,kev,exposure,backdoor,honeypot
 ```
